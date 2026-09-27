@@ -71,15 +71,11 @@ function buildFieldElement(fact) {
   wrapper.appendChild(label);
 
   if (fact.type === "boolean") {
-    wrapper.appendChild(buildRadioGroup(fact));
+    wrapper.appendChild(buildRadioGroup(fact.name, ["Yes", "No"]));
   } else if (fact.type === "integer") {
     wrapper.appendChild(buildNumberInput(fact));
-  } else if (fact.type === "enum") {
-    wrapper.appendChild(buildTextInput(fact));
-    const helper = document.createElement("p");
-    helper.className = "helper-text";
-    helper.textContent = `Enter one of: ${fact.values.join(", ")}`;
-    wrapper.appendChild(helper);
+  } else if (fact.type === "choice") {
+    wrapper.appendChild(buildRadioGroup(fact.name, fact.values));
   }
 
   const errorText = document.createElement("p");
@@ -91,15 +87,20 @@ function buildFieldElement(fact) {
   return wrapper;
 }
 
-function buildRadioGroup(fact) {
+/**
+ * A generic radio-button group for a field with a fixed set of options.
+ * Used for both Yes/No booleans and multi-value choice fields (e.g.
+ * degree) — same markup, just a different option list.
+ */
+function buildRadioGroup(fieldName, optionLabels) {
   const group = document.createElement("div");
   group.className = "radio-group";
 
-  for (const optionLabel of ["Yes", "No"]) {
+  for (const optionLabel of optionLabels) {
     const radioLabel = document.createElement("label");
     const input = document.createElement("input");
     input.type = "radio";
-    input.name = fact.name;
+    input.name = fieldName;
     input.value = optionLabel;
     radioLabel.appendChild(input);
     radioLabel.appendChild(document.createTextNode(optionLabel));
@@ -116,13 +117,6 @@ function buildNumberInput(fact) {
   input.min = fact.min;
   input.max = fact.max;
   input.step = 1;
-  return input;
-}
-
-function buildTextInput(fact) {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.name = fact.name;
   return input;
 }
 
@@ -165,14 +159,12 @@ function validateAndCollect() {
           rawFacts[fact.name] = value;
         }
       }
-    } else if (fact.type === "enum") {
-      const input = form.querySelector(`input[name="${fact.name}"]`);
-      const raw = input.value.trim();
-      const match = fact.values.find((v) => v.toLowerCase() === raw.toLowerCase());
-      if (!match) {
-        errors[fact.name] = `Please enter one of: ${fact.values.join(", ")}.`;
+    } else if (fact.type === "choice") {
+      const checked = form.querySelector(`input[name="${fact.name}"]:checked`);
+      if (!checked) {
+        errors[fact.name] = `Please select one: ${fact.values.join(", ")}.`;
       } else {
-        rawFacts[fact.name] = match;
+        rawFacts[fact.name] = checked.value;
       }
     }
   }

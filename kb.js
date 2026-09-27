@@ -19,9 +19,12 @@
 // Describes every field the form collects, so app.js can build the form
 // and validate it generically instead of hardcoding field names. Each
 // entry says the fact's name (the key it will have in working memory),
-// its type, and (for enums) the accepted values.
+// its type, and (for choice fields) the selectable values.
 //
-// type: "boolean" | "integer" | "enum"
+// type: "boolean" | "integer" | "choice"
+// A "choice" field renders as a set of clickable radio buttons over
+// `values`, so the collected value is always exactly one of those
+// strings — no free-text parsing or case/whitespace normalization needed.
 const RAW_FACTS = [
   { name: "python_coursework", label: "Completed Python coursework", type: "boolean", section: "Coursework" },
   { name: "software_engineering_coursework", label: "Completed Software Engineering coursework", type: "boolean", section: "Coursework" },
@@ -39,7 +42,7 @@ const RAW_FACTS = [
   {
     name: "degree",
     label: "Highest relevant degree",
-    type: "enum",
+    type: "choice",
     values: ["None", "Bachelor in CS", "Masters in CS", "Other"],
     section: "Credentials",
   },
