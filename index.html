@@ -25,19 +25,21 @@
     <div id="results-container" class="hidden">
       <h1>Results</h1>
       <p id="results-summary"></p>
-      <table id="results-table">
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Needed Skills</th>
-            <th>Desired Skills</th>
-            <th>Qualifications</th>
-            <th>Result</th>
-          </tr>
-        </thead>
-        <tbody id="results-table-body"></tbody>
-      </table>
-      <p class="star-legend">★ means every desired skill for that position was met.</p>
+      <div class="table-scroll">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Needed Skills</th>
+              <th>Desired Skills</th>
+              <th>Qualifications</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="results-table-body"></tbody>
+        </table>
+      </div>
+      <p class="star-legend"><span class="star-badge">★</span> means every desired skill for that position was met.</p>
 
       <div class="form-actions">
         <button type="button" id="start-over-button" class="btn-secondary">Start Over</button>

@@ -237,7 +237,14 @@ function renderResults(positionResults) {
     row.className = result.qualified ? "qualified-row" : "not-qualified-row";
 
     const positionCell = document.createElement("td");
-    positionCell.textContent = result.starred ? `${result.title} ★` : result.title;
+    positionCell.appendChild(document.createTextNode(result.title));
+    if (result.starred) {
+      const starBadge = document.createElement("span");
+      starBadge.className = "star-badge";
+      starBadge.textContent = "★";
+      starBadge.title = "All desired skills met";
+      positionCell.appendChild(starBadge);
+    }
 
     const neededCell = document.createElement("td");
     neededCell.appendChild(buildRequirementList(result.needed));
@@ -249,9 +256,7 @@ function renderResults(positionResults) {
     qualificationsCell.appendChild(buildRequirementList(result.qualifications));
 
     const resultCell = document.createElement("td");
-    resultCell.textContent = result.qualified
-      ? "QUALIFIED"
-      : `NOT QUALIFIED — ${result.failureReasons.join(", ")}`;
+    resultCell.appendChild(buildVerdictBadge(result));
 
     row.appendChild(positionCell);
     row.appendChild(neededCell);
@@ -281,6 +286,31 @@ function buildRequirementList(requirementResults) {
   }
 
   return list;
+}
+
+/**
+ * Build the Result cell's contents: a colored QUALIFIED / NOT QUALIFIED
+ * pill, plus — for a failing position — a short "Missing:" list of the
+ * same failure-reason labels already computed by the engine. Same
+ * information as before, just laid out as a label + list instead of one
+ * run-on sentence.
+ */
+function buildVerdictBadge(result) {
+  const wrapper = document.createElement("div");
+
+  const badge = document.createElement("span");
+  badge.className = result.qualified ? "badge badge-qualified" : "badge badge-not-qualified";
+  badge.textContent = result.qualified ? "QUALIFIED" : "NOT QUALIFIED";
+  wrapper.appendChild(badge);
+
+  if (!result.qualified) {
+    const missing = document.createElement("p");
+    missing.className = "missing-text";
+    missing.textContent = `Missing: ${result.failureReasons.join(", ")}`;
+    wrapper.appendChild(missing);
+  }
+
+  return wrapper;
 }
 
 function handleStartOver() {
