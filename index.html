@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Qualification Expert System</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>Job Qualification Expert System</h1>
+    <p>Answer every question below, then submit to see which positions you qualify for.</p>
+
+    <form id="applicant-form" novalidate>
+      <!-- Coursework, Experience, and Credentials fieldsets are built by
+           app.js from kb.js's RAW_FACTS list, so this file never has to
+           name individual fields. -->
+      <div id="form-sections"></div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Submit</button>
+      </div>
+    </form>
+
+    <div id="results-container" class="hidden">
+      <h1>Results</h1>
+      <p id="results-summary"></p>
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Needed Skills</th>
+            <th>Desired Skills</th>
+            <th>Qualifications</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="results-table-body"></tbody>
+      </table>
+      <p class="star-legend">★ means every desired skill for that position was met.</p>
+
+      <div class="form-actions">
+        <button type="button" id="start-over-button" class="btn-secondary">Start Over</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="kb.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

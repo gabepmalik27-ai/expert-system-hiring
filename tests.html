@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Expert System Tests</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="test-page">
+    <h1>Test Results</h1>
+    <p id="test-summary"></p>
+    <table id="test-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Case</th>
+          <th>Result</th>
+          <th>Diff</th>
+        </tr>
+      </thead>
+      <tbody id="test-table-body"></tbody>
+    </table>
+  </main>
+
+  <script src="kb.js"></script>
+  <script src="engine.js"></script>
+  <script src="tests.js"></script>
+  <script>
+    const results = runAllTests(RULES, POSITIONS);
+    const passCount = results.filter((r) => r.passed).length;
+
+    document.getElementById("test-summary").textContent =
+      `${passCount} / ${results.length} tests passed`;
+
+    const tbody = document.getElementById("test-table-body");
+    results.forEach((result, index) => {
+      const row = document.createElement("tr");
+      row.className = result.passed ? "row-pass" : "row-fail";
+
+      const numCell = document.createElement("td");
+      numCell.textContent = index + 1;
+
+      const nameCell = document.createElement("td");
+      nameCell.textContent = result.name;
+
+      const statusCell = document.createElement("td");
+      statusCell.textContent = result.passed ? "PASS" : "FAIL";
+
+      const diffCell = document.createElement("td");
+      if (result.diffs.length > 0) {
+        const list = document.createElement("ul");
+        result.diffs.forEach((diff) => {
+          const item = document.createElement("li");
+          item.textContent = diff;
+          list.appendChild(item);
+        });
+        diffCell.appendChild(list);
+      } else {
+        diffCell.textContent = "—";
+      }
+
+      row.appendChild(numCell);
+      row.appendChild(nameCell);
+      row.appendChild(statusCell);
+      row.appendChild(diffCell);
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
